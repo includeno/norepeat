@@ -1,0 +1,42 @@
+{
+   "background": {
+      "scripts": [
+         "main.js"
+      ],
+      "persistent":true
+   },
+   "icons": {
+      "48": "icon.png"
+   },
+   "content_scripts": [
+      {
+         "js": [
+            "jquery-3.5.1.min.js","content.js"
+         ],
+         "css": [],
+         "matches": [
+            "http://*/*",
+            "https://*/*"
+         ],
+         "run_at": "document_start"
+      }
+   ],
+   "browser_action": {
+      "default_icon": "icon.png",
+      "default_popup": "a.html"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCgn369O2kk1ywyPqBtx0v3hk+NB7C+F6LoHEGanKxePcNr81wXAmq8uGDm3CXX8m+lzxKoOQqly9UGcMMH1vIsY8fxQs4saBzmA0HCFobqNftlrCnOE2tDJ1PL2QF+dRLehFFmc0vRg5mWw0Rv+brm0ALoMJICml06+VmzQoM7UwIDAQAB",
+   "manifest_version": 2,
+   "name": "My Context Menu",
+   "permissions": [
+      "notifications",
+      "contextMenus",
+      "webRequest",
+      "webRequestBlocking",
+      "unlimitedStorage",
+      "storage",
+      "gcm"
+   ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "4"
+}
