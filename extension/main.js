@@ -2,8 +2,12 @@
 var script = document.createElement("script");
 script.type = "text/javascript";
 script.src = "jquery-3.5.1.min.js";
-document.getElementsByTagName('body')[0].appendChild(script);
+document.getElementsByTagName('head')[0].appendChild(script);
 
+var script = document.createElement("script");
+script.type = "text/javascript";
+script.src = "https://unpkg.com/ulid@2.3.0/dist/index.umd.js";
+document.getElementsByTagName('head')[0].appendChild(script);
 var CONTEXT_MENU_CONTENTS = {
   forWindows: [
     'foo',
@@ -18,6 +22,10 @@ var CONTEXT_MENU_CONTENTS = {
     'Launch Window "B"'
   ]
 }
+function get_user() {
+  var id = ULID.ulid()
+  return id.substring(0,6)
+}
 
 var temp;
 function sendrequest(message,address) {
@@ -26,7 +34,8 @@ function sendrequest(message,address) {
       type: 'post',
       url: 'http://127.0.0.1:5000/'+address,
       data: {
-        url: message
+        url: message,
+        user:get_user()
       },
       dataType: 'json',
       success: function (res) {
@@ -82,7 +91,9 @@ chrome.runtime.onInstalled.addListener(function () {
 chrome.contextMenus.onClicked.addListener(function (itemData) {
 
 });
-
+chrome.browserAction.onClicked.addListener(function(tab) {
+  chrome.tabs.executeScript(tab.id, {file: 'https://unpkg.com/ulid@2.3.0/dist/index.umd.js'});
+});
 chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
   if (tab.url !== undefined && info.status == "complete") {
 

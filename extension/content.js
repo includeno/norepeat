@@ -1,24 +1,58 @@
 
-function sendrequest(message,address) {
+function get_user() {
+    var id = ULID.ulid()
+    return id.substring(0,6)
+  }
+
+function checkNotification() {
+    if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+    }
+    // check whether notification permissions have alredy been granted
+    // Otherwise, ask the user for permission
+    else if (Notification.permission !== 'denied') {
+        Notification.requestPermission(function (permission) {
+            // If the user accepts, let's create a notification
+            if (permission === "granted") {
+                //new Notification("Request granted!");
+            }
+        });
+    }
+}
+function sendrequest(message, address) {
     var current = window.location.href;
     var temp;
     $(function () {
         $.ajax({
             type: 'post',
-            url: 'http://127.0.0.1:5000/'+address,
+            url: 'http://127.0.0.1:5000/' + address,
             data: {
-                url: current
+                url: current,
+                user:get_user()
             },
             dataType: 'json',
             success: function (res) {
                 // 返回成功的数据
                 temp = res.data;
                 if (res.code == 0) {
-                    //alert(temp);
-                    console.log(""+res.data)
+                    
+                    new Notification(
+                        "title",{
+                            body :res.data,
+                            icon : 'http://images0.cnblogs.com/news_topic/firefox.gif',
+                            tag : {} // 可以加一个tag
+                        }
+                    );
+                    console.log("" + res.data)
                 }
                 else {
-                    alert(temp);
+                    new Notification(
+                        "title",{
+                            body :res.data,
+                            icon : 'http://images0.cnblogs.com/news_topic/firefox.gif',
+                            tag : {} // 可以加一个tag
+                        }
+                    );
                 }
             }
         });
@@ -27,11 +61,11 @@ function sendrequest(message,address) {
 
 function clickbinding() {
     $("#reada").on('click', function () {
-        sendrequest("","read");
+        sendrequest("", "read");
     });
 
     $("#writea").on('click', function () {
-        sendrequest("","write");
+        sendrequest("", "write");
     });
 }
 
