@@ -4,7 +4,6 @@ import os
 from flask import Flask, jsonify
 from flask import request
 from flask_cors import CORS
-from file_to_data import *
 from redis_operations import *
 
 
