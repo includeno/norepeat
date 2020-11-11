@@ -35,7 +35,7 @@ CMD ["python", "/app/norepeat/flaskmain.py"]
 
 #vscode 终端
 #打包
-#docker build . -t testflask
+#docker build . -t norepeat
 
 #ssh工具
 #运行
