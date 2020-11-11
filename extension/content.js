@@ -1,4 +1,4 @@
-
+var server = 'http://47.100.40.223:5000/'
 function get_user() {
     var id = ULID.ulid()
     return id.substring(0,6)
@@ -25,7 +25,7 @@ function sendrequest(message, address) {
     $(function () {
         $.ajax({
             type: 'post',
-            url: 'http://127.0.0.1:5000/' + address,
+            url: server + address,
             data: {
                 url: current,
                 user:get_user()

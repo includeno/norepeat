@@ -1,4 +1,6 @@
 // Holds the data structure for all the context menus used in the app
+var server = 'http://47.100.40.223:5000/'
+//var server='http://127.0.0.1:5000/'
 var script = document.createElement("script");
 script.type = "text/javascript";
 script.src = "jquery-3.5.1.min.js";
@@ -32,7 +34,7 @@ function sendrequest(message,address) {
   $(function () {
     $.ajax({
       type: 'post',
-      url: 'http://127.0.0.1:5000/'+address,
+      url: server+address,
       data: {
         url: message,
         user:get_user()
