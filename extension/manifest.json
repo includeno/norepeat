@@ -23,12 +23,13 @@
    ],
    "browser_action": {
       "default_icon": "icon.png",
-      "default_popup": "a.html"
+      "default_popup": "popup.html"
    },
    "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCgn369O2kk1ywyPqBtx0v3hk+NB7C+F6LoHEGanKxePcNr81wXAmq8uGDm3CXX8m+lzxKoOQqly9UGcMMH1vIsY8fxQs4saBzmA0HCFobqNftlrCnOE2tDJ1PL2QF+dRLehFFmc0vRg5mWw0Rv+brm0ALoMJICml06+VmzQoM7UwIDAQAB",
    "manifest_version": 2,
    "name": "My Context Menu",
    "permissions": [
+      "tabs",
       "notifications",
       "contextMenus",
       "webRequest",
@@ -38,6 +39,10 @@
       "gcm"
    ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "4",
-   "content_security_policy": "script-src 'self' https://unpkg.com; object-src 'self'"
+   "version": "5",
+   "content_security_policy": "style-src 'self' 'unsafe-inline';script-src 'self' 'unsafe-eval' https://cdn.bootcss.com https://unpkg.com https://cdn.bootcdn.net; object-src 'self' ;",
+
+   "web_accessible_resources":[
+      "js/*"
+   ]
 }

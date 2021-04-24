@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+
+<body>
+  <div width="100px" id="app">
+    {{ message }}
+    <div>
+      <div width="100px" v-if="loginstate">
+        welcome {{ username }}
+        <!-- TODO -->
+        <button v-on:click="logout">{{ logout_message }}</button>
+      </div>
+      <vue_form v-else ></vue_form>
+      
+
+    </div>
+  </div>
+
+  <script src="https://cdn.bootcss.com/vue/2.6.12/vue.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.js"></script>
+  
+  <script src="popup.js"></script>
+
+</body>
+
+</html>

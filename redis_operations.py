@@ -80,7 +80,9 @@ class RedisHelper:
         if (self.connection == None):
             self.connection = redis.StrictRedis(connection_pool=self.pool)
         key="forbidden::"+str(user)+"::"+str(url)
-        result=self.connection.incr(key)
+        result = self.connection.incr(key)
+        #更新排行榜信息 >5
+        
         self.pool.disconnect()
         self.connection = None
         return result

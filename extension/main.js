@@ -1,6 +1,6 @@
 // Holds the data structure for all the context menus used in the app
-var server = 'http://47.100.40.223:5000/'
-//var server='http://127.0.0.1:5000/'
+//var server = 'http://47.100.40.223:5000/'
+var server='http://127.0.0.1:9999/'
 var script = document.createElement("script");
 script.type = "text/javascript";
 script.src = "jquery-3.5.1.min.js";
@@ -10,6 +10,8 @@ var script = document.createElement("script");
 script.type = "text/javascript";
 script.src = "https://unpkg.com/ulid@2.3.0/dist/index.umd.js";
 document.getElementsByTagName('head')[0].appendChild(script);
+
+
 var CONTEXT_MENU_CONTENTS = {
   forWindows: [
     'foo',
@@ -37,17 +39,29 @@ function sendrequest(message,address) {
       url: server+address,
       data: {
         url: message,
-        user:get_user()
       },
       dataType: 'json',
       success: function (res) {
         // 返回成功的数据
-        temp = res.data;
+        temp = res.message;
         if (res.code == 0) {
-          alert(temp);
+          new Notification(
+            res.message,{
+                body :" "+res.address,
+                icon : 'http://images0.cnblogs.com/news_topic/firefox.gif',
+                tag : {"aaa":"jansfbsad"} // 可以加一个tag
+            }
+          );
         }
         else {
-          alert("当前页面无效");
+          
+          new Notification(
+            res.message,{
+                body :" "+res.address,
+                icon : 'http://images0.cnblogs.com/news_topic/firefox.gif',
+                tag : {"aaa":"jansfbsad"} // 可以加一个tag
+            }
+          );
         }
       }
     });
@@ -84,6 +98,34 @@ function setUpContextMenus() {
 
 }
 
+//监听content.js传递的消息
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
+{
+    
+    code = String(JSON.stringify(request).split(",")[0]).split(":")[1]
+    msg=String(JSON.stringify(request).split(",")[1]).split(":")[1]
+    url=String(JSON.stringify(request).split(",")[2])
+    new Notification(
+      "title",{
+          body :msg+" "+url,
+          icon : 'http://images0.cnblogs.com/news_topic/firefox.gif',
+          tag : {"aaa":"jansfbsad"} // 可以加一个tag
+      }
+    );
+    sendResponse('我已收到你的消息：' +JSON.stringify(request));//做出回应
+});
+
+chrome.tabs.getSelected(null,function(tab) {
+  var tablink = tab.url;
+  console.log("tab.url")
+  new Notification(
+    "title",{
+        body :"chrome.tabs.getSelected"+" "+tab.url,
+        icon : 'http://images0.cnblogs.com/news_topic/firefox.gif',
+        tag : {"bbbb":"aaaaaaaaaaaaaaaaaa"} // 可以加一个tag
+    }
+  );
+});
 
 chrome.runtime.onInstalled.addListener(function () {
   // When the app gets installed, set up the context menus

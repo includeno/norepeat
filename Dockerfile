@@ -1,9 +1,9 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
 #docker pull python:3.8.6-slim
 #版本查询 https://hub.docker.com/_/python?tab=tags
-FROM python:3.8-slim-buster
+FROM python:3.9.4
 
-EXPOSE 5000
+EXPOSE 9999
 
 # Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -34,14 +34,14 @@ RUN /bin/sh -c 'cd /app/norepeat && python -m pip install -r requirements.txt '
 CMD ["python", "/app/norepeat/flaskmain.py"]
 
 #vscode 终端
-#打包
+#打包镜像
 #docker build . -t norepeat
 
 #ssh工具
-#运行
+#运行容器
 #docker run -it -p 5000:5000 --name norepeat_container norepeat
 #删除镜像
-#docker image rm norepeat
+#docker h  rm norepeat
 #停止容器
 #docker stop norepeat_container
 #删除容器
