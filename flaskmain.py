@@ -23,12 +23,7 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True)
 user=None
 
-def init_user():
-    global user
-    if (Data.currentuser == None and 'username' in session):
-        Data.currentuser = str(escape(session['username']))
-        return True
-    return False
+
 #对URL进行简化处理
 def simpleURL(link):
     #读取nosimple配置信息
@@ -100,25 +95,25 @@ def check():
     link=request.form.get("url")
     link=simpleURL(link)
     print("current link",link)
+    username=escape(session['username'])
     
-    if not init_user():
-        ret = {'code': 1, 'message': "此网页无效", 'address': link}
-    ret = {'code': 1, 'message': "此网页无效",'address':link}
-    if(checkURL(Data.currentuser,link)==True):
-        ret = {'code': 0, 'message': "此网页有效",'address':link}
+    
+    if(checkURL(username,link)==True):
+        ret = {'code': 0, 'message': "此网页有效", 'address': link}
+    else:
+        ret = {'code': 1, 'message': "此网页无效",'address':link}
     return jsonify(ret)
 
 
 @app.route('/add', methods=["post"])
 def add():
     
-    init_user()
-    
     link=request.form.get("url")
     link=simpleURL(link)
-    ret = {'code': 1, 'message': "已无效",'address':link}
-    if(checkURL(Data.currentuser,link)==True):
-        helper.forbiden_incr(Data.currentuser,link)
+    ret = {'code': 1, 'message': "已无效", 'address': link}
+    username=escape(session['username'])
+    if(checkURL(username,link)==True):
+        helper.forbiden_incr(username,link)
         ret = {'code': 0, 'message': "网页无效操作成功",'address':link}
         print("网页无效")
     return jsonify(ret)
@@ -126,7 +121,6 @@ def add():
 @app.route('/delete', methods=["post"])
 def delete():
     
-    init_user()
     #user=request.form.get("user")
     link=request.form.get("url")
     link=simpleURL(link)

@@ -1,5 +1,4 @@
 Flask_Cors
 Flask
 redis
-requests_html
-gunicorn
+

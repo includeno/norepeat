@@ -1,9 +1,12 @@
+var server = 'http://127.0.0.1:9999/'
+
+
 var temp;
 function sendrequest(message) {
     $(function () {
         $.ajax({
             type: 'post',
-            url: 'http://127.0.0.1:5000/send',
+            url: server+'send',
             data:{
                 id:message
             },

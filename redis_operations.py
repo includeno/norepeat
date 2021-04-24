@@ -79,7 +79,9 @@ class RedisHelper:
         """
         if (self.connection == None):
             self.connection = redis.StrictRedis(connection_pool=self.pool)
-        key="forbidden::"+str(user)+"::"+str(url)
+        key = "forbidden::" + str(user) + "::" + str(url)
+        print("forbiden_incr_key:", key)
+        self.connection.setnx(key,"0")
         result = self.connection.incr(key)
         #更新排行榜信息 >5
         
@@ -92,7 +94,8 @@ class RedisHelper:
         """
         if (self.connection == None):
             self.connection = redis.StrictRedis(connection_pool=self.pool)
-        key="forbidden::"+str(user)+"::"+str(url)
+        key = "forbidden::" + str(user) + "::" + str(url)
+        print("forbiden_get_key:",key)
         result=self.connection.get(key)
         self.pool.disconnect()
         self.connection = None
@@ -103,7 +106,8 @@ class RedisHelper:
         """
         if (self.connection == None):
             self.connection = redis.StrictRedis(connection_pool=self.pool)
-        key="forbidden::"+str(user)+"::"+str(url)
+        key = "forbidden::" + str(user) + "::" + str(url)
+        print("forbiden_delete_key:",key)
         self.connection.delete(key)
         self.pool.disconnect()
         self.connection = None
