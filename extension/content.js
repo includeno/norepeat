@@ -1,7 +1,3 @@
-//var server = 'http://47.100.40.223:9999/'
-var server = 'http://127.0.0.1:9999/'
-
-
 
 function checkNotification() {
     if (!("Notification" in window)) {
@@ -18,11 +14,6 @@ function checkNotification() {
         });
     }
 }
-
-
-
-
-
 
 
 var url = "url:" + window.location.href
