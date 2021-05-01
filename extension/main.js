@@ -77,7 +77,8 @@ function setUpContextMenus() {
   });
 
 }
-
+//每次都自动加载右键菜单
+setUpContextMenus()
 
 function send_check_request(url) {
   $(function () {
@@ -137,7 +138,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 chrome.runtime.onInstalled.addListener(function () {
   // When the app gets installed, set up the context menus
-  setUpContextMenus();
+  //setUpContextMenus();
 });
 
 
