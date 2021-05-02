@@ -1,17 +1,14 @@
 vscode 终端
 打包镜像
-docker build . -t norepeat:1.0
+docker build . -t includeno/norepeat_springboot:1.0
 
+docker pull includeno/norepeat_springboot:1.0-20210502
 
-docker run -itd -p 9999:9999 --name norepeat_container norepeat:1.0
-docker logs -ft norepeat_container
-docker exec -it norepeat_container /bin/bash
+docker run -itd -p 9999:8080 --name norepeat_springboot_container includeno/norepeat_springboot:1.0-20210502
+docker logs -ft norepeat_springboot_container
+docker exec -it norepeat_springboot_container /bin/bash
 
-docker stop norepeat_container
-docker rm norepeat_container
+docker stop norepeat_springboot_container
+docker rm norepeat_springboot_container
 
-docker image rm norepeat:1.0
-
-
-requests_html
-gunicorn
+docker image rm includeno/norepeat_springboot:1.0-20210502

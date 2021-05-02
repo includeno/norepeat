@@ -1,5 +1,5 @@
 // Holds the data structure for all the context menus used in the app
-var server = 'http://localhost:8080/'
+var server = 'http://47.100.40.223:9999/'
 
 var script = document.createElement("script");
 script.type = "text/javascript";

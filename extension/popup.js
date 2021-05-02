@@ -1,5 +1,5 @@
 
-var server = 'http://localhost:8080/'
+var server = 'http://47.100.40.223:9999/'
 //https://segmentfault.com/q/1010000017010394
 
 var vm = new Vue({
