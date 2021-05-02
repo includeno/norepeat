@@ -1,4 +1,0 @@
-Flask_Cors
-Flask
-redis
-
