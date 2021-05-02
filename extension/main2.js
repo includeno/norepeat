@@ -222,12 +222,12 @@ function send_check_request(message) {
       console.log("response.data.code" + response.data.code)
       // 返回成功的数据
 
-      new Notification(
-        response.data.message, {
-        body: " " + message,
-        icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
+      // new Notification(
+      //   response.data.message, {
+      //   body: " " + message,
+      //   icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
 
-      })
+      // })
     }
 
   })
