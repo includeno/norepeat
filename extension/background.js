@@ -33,38 +33,15 @@ function a1() {
   });
   return re;
 }
-function loginfunctionaxios(message) {
-  var formdata = new FormData()
-  var url = server + "checkuser"
-  axios({
-    method: "post",
-    url: url,
-    data: formdata,
-    auth: {
-      username: user.username,
-      password: user.password,
-    }
-  }).then(response => {
-    if (response.data.code == "200") {
-      options = "1"
-      console.log("验证账户成功")
-      send_check_request(message);
-    }
-
-  })
-}
-
 
 
 async function compute(message) {
   var userinfo = await a1();
-
   console.log("compute :" + userinfo)
-
   if (userinfo != null&&userinfo!='' && userinfo.username != "") {
     Object.assign(user, { username: userinfo.split("@@@")[0], password: userinfo.split("@@@")[1] });
     if (options != "1") {
-      loginfunctionaxios(message)
+      loginfunctionaxios(message,userinfo.split("@@@")[0],userinfo.split("@@@")[1])
 
     }
     
@@ -79,6 +56,86 @@ async function compute(message) {
       }
     );
   }
+}
+
+
+function loginfunctionaxios(message,username,password) {
+  var formdata = new FormData()
+  var url = server + "checkuser"
+  axios({
+    method: "post",
+    url: url,
+    data: formdata,
+    auth: {
+      username: username,
+      password: password,
+    }
+  }).then(response => {
+    if (response.data.code == "200") {
+      options = "1"
+      console.log("验证账户成功")
+      send_check_request(message,username,password);
+    }
+
+  })
+}
+
+function send_check_request(message,username,password) {
+  var formdata = new FormData()
+  formdata.append("url", message)
+  var url = server + "check";
+  
+  axios({
+    method: "post",
+    url: url,
+    data: formdata,
+    auth: {
+      username: username,
+      password: password,
+    }
+  }).then(response => {
+    
+    response=JSON.parse(JSON.stringify(response))
+    //此网页无效
+    if (response.data.code == "1") {
+      // 返回成功的数据
+      console.log("response.data.code" + response.data.code)
+      new Notification(
+        response.data.message, {
+        body: " " + message,
+        icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
+
+      })
+
+    }
+    //此网页有效
+    else if (response.data.code == "0"){
+      
+      console.log("response.data.code" + response.data.code)
+      // 返回成功的数据
+
+      // new Notification(
+      //   response.data.message, {
+      //   body: " " + message,
+      //   icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
+
+      // })
+    }
+
+  })
+}
+
+
+async function fresh_user(url) {
+  var userinfo = await a1();
+
+  console.log("fresh_user :" + userinfo)
+  if (userinfo != null&&userinfo!='' && userinfo.username != "") {
+    Object.assign(user, { username: userinfo.split("@@@")[0], password: userinfo.split("@@@")[1] });
+    send_check_request(url,userinfo.split("@@@")[0],userinfo.split("@@@")[1]);
+    
+  }
+  
 }
 
 function sendrequest(message, address) {
@@ -118,42 +175,7 @@ function sendrequest(message, address) {
   })
 }
 
-function sendrequest2(message, address) {
-  var temp;
-  $(function () {
-    $.ajax({
-      type: 'post',
-      url: server + address,
-      data: {
-        url: message,
-      },
-      dataType: 'json',
-      success: function (res) {
-        // 返回成功的数据
-        temp = res.message;
-        if (res.code == 0) {
-          new Notification(
-            res.message, {
-            body: " " + res.address,
-            icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
-            tag: { "aaa": "jansfbsad" } // 可以加一个tag
-          }
-          );
-        }
-        else {
 
-          new Notification(
-            res.message, {
-            body: " " + res.address,
-            icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
-            tag: { "aaa": "jansfbsad" } // 可以加一个tag
-          }
-          );
-        }
-      }
-    });
-  });
-}
 
 function setUpContextMenus() {
 
@@ -187,90 +209,7 @@ function setUpContextMenus() {
 //每次都自动加载右键菜单
 setUpContextMenus()
 
-function send_check_request(message) {
-  var formdata = new FormData()
-  formdata.append("url", message)
-  var url = server + "check";
 
-  axios({
-    method: "post",
-    url: url,
-    data: formdata,
-    auth: {
-      username: user.username,
-      password: user.password,
-    }
-  }).then(response => {
-    
-    
-    response=JSON.parse(JSON.stringify(response))
-    //此网页无效
-    if (response.data.code == "1") {
-      // 返回成功的数据
-      console.log("response.data.code" + response.data.code)
-      new Notification(
-        response.data.message, {
-        body: " " + message,
-        icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
-
-      })
-
-    }
-    //此网页有效
-    else if (response.data.code == "0"){
-      
-      console.log("response.data.code" + response.data.code)
-      // 返回成功的数据
-
-      // new Notification(
-      //   response.data.message, {
-      //   body: " " + message,
-      //   icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
-
-      // })
-    }
-
-  })
-}
-
-function send_check_request23(url) {
-  $(function () {
-    $.ajax({
-      type: 'post',
-      url: server + "check",
-      data: {
-        url: url,
-      },
-      dataType: 'json',
-      success: function (res) {
-        if (res.code == "2") {
-
-          new Notification(
-            "用户未登陆通知", {
-            body: " ",
-            icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
-
-          })
-        }
-        //网页无效的时候发送通知消息
-        else if (res.code == "1") {
-          // 返回成功的数据
-
-          new Notification(
-            "网页无效通知", {
-            body: " " + url,
-            icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
-
-          })
-
-        }
-        else {
-          console.log("正常" + res.code)
-        }
-      }
-    });
-  });
-}
 
 //监听content.js传递的消息
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -281,8 +220,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     compute(url);
   }
   else {
-    send_check_request(url);
-    console.log("check completed")
+    fresh_user(url);
+    
   }
   
   

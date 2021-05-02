@@ -8,7 +8,7 @@ on: # push operation is operate
     branches: [norepeat_springboot]
 # CI enviroment settings
 env:
-  STATE_RELEASE_VERSION: "1.0" # version
+  STATE_RELEASE_VERSION: "1.0.0" # version
   TAG_NAME: "norepeat_springboot" #tag 只能小写开头
   java-version: "11"
 jobs:
@@ -42,7 +42,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          tags: "includeno/${{ env.TAG_NAME }}:latest,includeno/${{ env.TAG_NAME }}:${{ env.STATE_RELEASE_VERSION }}-${{ env.BUILD_DATE }}"
+          tags: "includeno/${{ env.TAG_NAME }}:latest,includeno/${{ env.TAG_NAME }}:${{ env.STATE_RELEASE_VERSION }}"
           push: true
       - name: The job has succeeded
         if: ${{ success() }}

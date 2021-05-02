@@ -1,7 +1,7 @@
 {
    "background": {
       "scripts": [
-         "main2.js"
+         "background.js"
       ],
       "persistent":true
    },
