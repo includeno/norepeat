@@ -19,7 +19,7 @@ public class FliterService {
         List<String> array=Arrays.asList(fliternames.split(","));
         array=array.stream().parallel().filter(x->finalurl.contains(x)).collect(Collectors.toList());
         if(array.size()>0){
-            url=url.split("/?")[0];
+            url=url.split("?")[0];
             return url;
         }
         else {
