@@ -4,7 +4,7 @@
 
 <body>
   <div width="100px" id="app">
-    
+
     <div>
       <div width="100px" v-if="loginstate">
         {{ message }} {{ username }}
@@ -12,14 +12,32 @@
         <!-- TODO -->
         <button v-on:click="logout">{{ logout_message }}</button>
       </div>
-      <vue_form v-else ></vue_form>
-      
+      <vue_form v-else></vue_form>
+
+
+    </div>
+
+    <div>
+      <div v-if="loginstate">
+
+        <button v-on:click="refresh">刷新</button>
+
+        <div ref="hello" id="requestform">
+          <li v-for="(item, index) in templist" v-bind:key="index" >
+            <li v-for="(itemkey, itemindex) in item" v-bind:key="itemindex" >
+              {{itemkey}}:{{itemindex}}::{{item[itemkey]}}
+            </li>
+          </li>
+          <br>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <script src="https://cdn.bootcss.com/vue/2.6.12/vue.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.js"></script>
-  
+
   <script src="popup.js"></script>
 
 </body>

@@ -12,12 +12,14 @@ var vm = new Vue({
         logout_message: "登出",
 
         localName: "NoRepeat",
+
+        templist:[],
     },
     //页面加载完自动执行
     mounted: function () {
         console.log("mounted")
 
-        //添加loaclstorage记录
+        //尝试加载chrome.storage记录
         this.trylogin();
 
     },
@@ -41,7 +43,7 @@ var vm = new Vue({
         trylogin: function () {
             var name = ""
             chrome.storage.sync.get(['key'], result => {
-                console.log('Value currently is ' + result.key);
+                //console.log('Value currently is ' + result.key);
                 name = result.key;
 
                 if (name != null && name != "") {
@@ -80,11 +82,38 @@ var vm = new Vue({
                 }
                 else {
 
-
                 }
 
             });
-        }
+        },
+        gettemplist: function () {
+            var name = ""
+            chrome.storage.sync.get(['key'], result => {
+                name = result.key;
+
+                if (name != null && name != "") {
+                    username = name.split("@@@")[0]
+                    password = name.split("@@@")[1]
+                    
+                    var url = server + "gettemplist"
+                    axios({
+                        method: "get",
+                        url: url,
+                        auth: {
+                            username: username,
+                            password: password,
+                        }
+                    }).then(response => {
+                        this.templist = []
+                        for (var i = 0; i < response.data.length; i++){
+                            this.templist.push(response.data[i]);
+                        }
+                    })
+                }
+                
+            });
+        },
+
     },
     components: {
         'vue_form': {
