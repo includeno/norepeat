@@ -7,37 +7,40 @@
 
     <div>
       <div width="100px" v-if="loginstate">
-        {{ message }} {{ username }}
-        <br>
-        <!-- TODO -->
-        <button v-on:click="logout">{{ logout_message }}</button>
+        <div width="100px">
+          <h2>{{ message }} {{ username }} <button v-on:click="logout">{{ logout_message }}</button></h2>
+
+        </div>
+        
+        
+        
       </div>
       <vue_form v-else></vue_form>
-
 
     </div>
 
     <div>
       <div v-if="loginstate">
-
-        <button v-on:click="gettemplist">刷新</button>
+        <h3>今天的临时列表/Today's temporary URL list<button v-on:click="gettemplist">刷新列表/Refresh Table</button></h3>
+        
+        
         <br>
-        <br>
+        
         <div ref="hello" id="requestform">
 
-          <table v-bind:style="{width : 370+'px' }" align="left">
+          <table v-bind:style="{width : 430+'px' }" align="left">
             <tr>
-              <td v-bind:style="{width : 120+'px' }">时间/Time</td>
-              <td v-bind:style="{width : 250+'px' }">链接/URL</td>
+              <td v-bind:style="{width : 150+'px' }">时间/Time UTF</td>
+              <td v-bind:style="{width : 280+'px' }">链接/URL</td>
             </tr>
 
             <tr v-for="(item, index) in templist">
 
-              <td v-bind:style="{width : 120+'px' }">
+              <td v-bind:style="{width : 150+'px' }">
                 {{item.time}}
               </td>
-              <td v-bind:style="{width : 250+'px' }">
-                <a v-on:click="opennewtab(item.url)">{{show_standard_url(item.url)}}</a>
+              <td v-bind:style="{width : 280+'px' }">
+                <a href="item.url" v-on:click="opennewtab(item.url)">{{show_standard_url(item.url)}}</a>
               </td>
 
             </tr>

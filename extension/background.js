@@ -11,6 +11,13 @@ script.type = "text/javascript";
 script.src = "jquery-3.5.1.min.js";
 document.getElementsByTagName('head')[0].appendChild(script);
 
+function getdate() {
+  var now = new Date(),
+    y = now.getFullYear(),
+    m = now.getMonth() + 1,
+    d = now.getDate();
+  return y + "-" + (m < 10 ? "0" + m : m) + "-" + (d < 10 ? "0" + d : d) + " " + now.toTimeString().substr(0, 8);
+}
 
 function setUpContextMenus() {
 
@@ -60,7 +67,7 @@ function a1() {
       }
       // Pass the data retrieved from storage down the promise chain.
       resolve(result.key);
-      console.log("promise :" + result.key)
+      //console.log("promise :" + result.key)
     });
   });
   return re;
@@ -97,7 +104,7 @@ function send_check_request(message, username, password) {
     //此网页有效
     else if (response.data.code == "0") {
 
-      console.log("response.data.code" + response.data.code)
+      //console.log("response.data.code" + response.data.code)
       // 返回成功的数据
 
       // new Notification(
@@ -114,6 +121,7 @@ function send_check_request(message, username, password) {
 function send_add_to_list_request(message, username, password) {
   var formdata = new FormData()
   formdata.append("url", message)
+  formdata.append("time", getdate())
   var url = server + "addtemplist";
 
   axios({
@@ -125,27 +133,84 @@ function send_add_to_list_request(message, username, password) {
       password: password,
     }
   }).then(response => {
-    new Notification(
-      "添加至列表成功", {
-      body: " " + message,
-      icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
 
-    })
+    if (response.data.code == "0") {
+      if (message.startsWith("https://www.baidu.com/link?url=") || message.startsWith("http://www.baidu.com/link?url=")) {
+        axios({
+          method: "get",
+          url: message,
+          
+        }).then(responseinside => {
+          message = responseinside.request.responseURL
+
+          new Notification(
+            "添加至列表成功/Add to temporary list", {
+            body: " " + message,
+            icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
+
+          });
+
+        })
+      }
+      else {
+        new Notification(
+          "添加至列表成功/Add to temporary list", {
+          body: " " + message,
+          icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
+
+        });
+      }
+
+
+    }
+    if (response.data.code == "1") {
+
+      if (message.startsWith("https://www.baidu.com/link?url=") || message.startsWith("http://www.baidu.com/link?url=")) {
+        axios({
+          method: "get",
+          url: message,
+          
+        }).then(responseinside => {
+          message = responseinside.request.responseURL
+
+          new Notification(
+            "列表中存在此记录/Exists repeat URL in temporary list", {
+            body: " " + message,
+            icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
+
+          });
+
+        })
+      }
+      else {
+        new Notification(
+          "列表中存在此记录/Exists repeat URL in temporary list", {
+          body: " " + message,
+          icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
+
+        });
+      }
+
+    }
+
+
+
+
 
   })
 }
 
 //以方法作为参数 https://www.cnblogs.com/kid526940065/p/8950654.html
-async function compute(message,fn) {
+async function compute(message, fn) {
   var userinfo = await a1();
-  console.log("compute :" + userinfo)
+  //console.log("compute :" + userinfo)
   if (userinfo != null && userinfo != '' && userinfo.username != "") {
     Object.assign(user, { username: userinfo.split("@@@")[0], password: userinfo.split("@@@")[1] });
     let username = userinfo.split("@@@")[0];
     let password = userinfo.split("@@@")[1];
 
     if (options != "1") {
-      
+
       var formdata = new FormData()
       var url = server + "checkuser"
       axios({
@@ -226,15 +291,15 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     url = String(JSON.stringify(request).split("url:")[1]).replace('"', '')
     msg = "收到content发送的url 用于判断网页是否重复"
     console.log(msg + url)
-    compute(url,send_check_request);
+    compute(url, send_check_request);
     sendResponse('我已收到你的当前网页url：' + JSON.stringify(request));//做出回应
   }
-  if (request.startsWith("templist:")) {
+  else if (request.startsWith("templist:")) {
     url = String(JSON.stringify(request).split("templist:")[1]).replace('"', '')
     msg = "收到content发送的templist url 用于在用户列表添加网页"
     console.log(msg + url)
     sendResponse('我已收到你的添加列表请求url：' + JSON.stringify(request));//做出回应
-    compute(url,send_add_to_list_request);
+    compute(url, send_add_to_list_request);
   }
 
 });

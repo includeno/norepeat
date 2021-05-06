@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 @Service
 public class FliterService {
+    Logger log= LoggerFactory.getLogger("FliterService");
     @Value("fliternames")
     String fliternames;
 
@@ -25,8 +28,10 @@ public class FliterService {
             Request request = new Request.Builder().url(url).build();
             try {
                 Response response = client.newCall(request).execute();
-                System.out.println(response.request().url().toString());
-                return (response.request().url().toString());
+                String result=response.request().url().toString();
+                System.out.println(result);
+                response.close();
+                return (result);
             } catch (IOException e) {
                 log.warn("过滤url: IOException " + url);
                 return url;
