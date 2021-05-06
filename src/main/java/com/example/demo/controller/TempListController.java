@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.example.demo.service.FliterService;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +40,6 @@ public class TempListController {
 
         HashMap<String, String> result = new HashMap<>();
 
-        int setTimeOut = 0;
-
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat dayformat = new SimpleDateFormat("yyyy-MM-dd");
         Date inputtime=new Date();
@@ -60,9 +57,6 @@ public class TempListController {
         long expireOfKey = redisTemplate.getExpire(key);//-1永久  -2w无key
         System.out.println("expireOfKey:" + expireOfKey);
 
-//        if(redisTemplate.get(username + "::templist")==null){
-//            setTimeOut=1;
-//        }
 
         url = fliterService.doFliterUrl(url);
 
