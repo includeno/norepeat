@@ -28,10 +28,10 @@ chrome.runtime.sendMessage(url, (response) => {
 var currentelement = null;
 const bingdingkey='192'
 function tag_a_event_over(event) {
-    console.log('element=', event);
+    //console.log('element=', event);
     //console.log('srcElement=', event.srcElement);
     //console.log('event.srcElement.href=',event.srcElement.href);
-    console.log('(event.srcElement)=>', (event.srcElement));
+    //console.log('(event.srcElement)=>', (event.srcElement));
     if (event.srcElement!=null &&'href' in event.srcElement) {
         currentelement = event.srcElement.href;
         console.log('event.srcElement 1=>', event.srcElement.href);
@@ -53,8 +53,11 @@ function tag_a_event_over(event) {
         //未找到
         console.log('未找到');
     }
-    if (currentelement.indexOf('javascript:')!=-1) {
+    if (currentelement!=null &&currentelement.indexOf('javascript:')!=-1) {
         currentelement = null;
+    }
+    if (currentelement != null) {
+        
     }
 }
 

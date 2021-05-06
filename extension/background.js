@@ -125,33 +125,12 @@ function send_add_to_list_request(message, username, password) {
       password: password,
     }
   }).then(response => {
+    new Notification(
+      "添加至列表成功", {
+      body: " " + message,
+      icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
 
-    response = JSON.parse(JSON.stringify(response))
-    //此网页无效
-    if (response.data.code == "1") {
-      // 返回成功的数据
-      console.log("response.data.code" + response.data.code)
-      new Notification(
-        response.data.message, {
-        body: " " + message,
-        icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
-
-      })
-
-    }
-    //此网页有效
-    else if (response.data.code == "0") {
-
-      console.log("response.data.code" + response.data.code)
-      // 返回成功的数据
-
-      // new Notification(
-      //   response.data.message, {
-      //   body: " " + message,
-      //   icon: 'http://images0.cnblogs.com/news_topic/firefox.gif',
-
-      // })
-    }
+    })
 
   })
 }

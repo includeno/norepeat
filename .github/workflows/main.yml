@@ -8,7 +8,7 @@ on: # push operation is operate
     branches: [norepeat_springboot]
 # CI enviroment settings
 env:
-  STATE_RELEASE_VERSION: "1.0.1beta" # version
+  STATE_RELEASE_VERSION: "1.0.2" # version
   TAG_NAME: "norepeat_springboot" #tag 只能小写开头
   java-version: "11"
 jobs:

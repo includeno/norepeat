@@ -14,7 +14,7 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>norepeat_springboot_git</artifactId>
-    <version>1.0.1beta</version>
+    <version>1.0.2</version>
     <name>norepeat_springboot_git</name>
     <description>DemoprojectforSpringBoot</description>
     <properties>
