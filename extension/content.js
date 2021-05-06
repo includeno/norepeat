@@ -53,7 +53,7 @@ function tag_a_event_over(event) {
         //未找到
         console.log('未找到');
     }
-    if ('javascript:' in currentelement) {
+    if (currentelement.indexOf('javascript:')!=-1) {
         currentelement = null;
     }
 }

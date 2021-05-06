@@ -13,7 +13,7 @@ var vm = new Vue({
 
         localName: "NoRepeat",
 
-        templist:[],
+        templist: [],
     },
     //页面加载完自动执行
     mounted: function () {
@@ -94,7 +94,7 @@ var vm = new Vue({
                 if (name != null && name != "") {
                     username = name.split("@@@")[0]
                     password = name.split("@@@")[1]
-                    
+
                     var url = server + "gettemplist"
                     axios({
                         method: "get",
@@ -105,15 +105,27 @@ var vm = new Vue({
                         }
                     }).then(response => {
                         this.templist = []
-                        for (var i = 0; i < response.data.length; i++){
+                        for (var i = 0; i < response.data.length; i++) {
                             this.templist.push(response.data[i]);
                         }
-                    })
+                    });
                 }
-                
+
             });
         },
+        opennewtab: function (url) {
+            chrome.tabs.create({ url: url }, function (tab) {
+            });
 
+        },
+        show_standard_url: function (url) {
+            if (url.length<=45) {
+                return url;
+            }
+            else {
+                return url.substring(0,38)+"......"
+            }
+        },
     },
     components: {
         'vue_form': {
@@ -142,11 +154,11 @@ var vm = new Vue({
                         url: url,
                         data: formdata,
                         auth: {
-                          username: this.username,
-                          password: this.password,
+                            username: this.username,
+                            password: this.password,
                         }
-                      }).then(response => {
-                        
+                    }).then(response => {
+
                         console.log("response.data:" + response.data)
                         if (response.data.code == '200') {
                             vm.loginstate = true;
@@ -160,7 +172,7 @@ var vm = new Vue({
                         else {
                             console.log("response.data.code:" + response.data.code)
                             alert("登陆失败")
-                            
+
                         }
 
 

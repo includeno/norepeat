@@ -20,19 +20,36 @@
     <div>
       <div v-if="loginstate">
 
-        <button v-on:click="refresh">刷新</button>
-
+        <button v-on:click="gettemplist">刷新</button>
+        <br>
+        <br>
         <div ref="hello" id="requestform">
-          <li v-for="(item, index) in templist" v-bind:key="index" >
-            <li v-for="(itemkey, itemindex) in item" v-bind:key="itemindex" >
-              {{itemkey}}:{{itemindex}}::{{item[itemkey]}}
-            </li>
-          </li>
-          <br>
-        </div>
-      </div>
 
+          <table v-bind:style="{width : 370+'px' }" align="left">
+            <tr>
+              <td v-bind:style="{width : 120+'px' }">时间/Time</td>
+              <td v-bind:style="{width : 250+'px' }">链接/URL</td>
+            </tr>
+
+            <tr v-for="(item, index) in templist">
+
+              <td v-bind:style="{width : 120+'px' }">
+                {{item.time}}
+              </td>
+              <td v-bind:style="{width : 250+'px' }">
+                <a v-on:click="opennewtab(item.url)">{{show_standard_url(item.url)}}</a>
+              </td>
+
+            </tr>
+        </div>
+        </table>
+
+
+
+      </div>
     </div>
+
+  </div>
   </div>
 
   <script src="https://cdn.bootcss.com/vue/2.6.12/vue.js"></script>

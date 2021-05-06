@@ -38,7 +38,7 @@ public class TempListController {
 
         url=fliterService.doFliterUrl(url);
         //DateUtil.now().toString();
-
+        log.info("转化后的url:"+url);
         Boolean success=redisTemplate.opsForHash().putIfAbsent(username+"::templist",url,DateUtil.now().toString());
         //首次
         if(success){
@@ -59,15 +59,33 @@ public class TempListController {
 
     @GetMapping("/gettemplist")
     public ArrayList<HashMap<String, String>> getTempList(){
+        class TempListRecord{
+            String url;
+            String time;
+            public TempListRecord(String time,String url){
+                this.time=time;
+                this.url=url;
+            }
+        }
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         String username = authentication.getName();
 
         ArrayList<HashMap<String, String>> result=new ArrayList<>();
-        Set<String> keys = redisTemplate.opsForHash().getOperations().keys(username + "::templist");
-        for(String key:keys){
+        Set<Object> keys = redisTemplate.opsForHash().keys(username + "::templist");
+        ArrayList<TempListRecord> records=new ArrayList();
+        for(Object key:keys){
+            String keystr = String.valueOf(key);
+            String timestr=String.valueOf(redisTemplate.opsForHash().get(username + "::templist",key));
+            records.add(new TempListRecord(timestr,keystr));
+
+        }
+        records.sort((a1,a2)->a1.time.compareTo(a2.time));
+        for(TempListRecord record:records){
             HashMap<String, String> map=new HashMap<>();
-            map.put(key,(String)redisTemplate.opsForHash().get(username + "::templist",key));
+            log.info("key: "+record.time+" value:"+record.url);
+            map.put("url",record.url);
+            map.put("time",record.time);
             result.add(map);
         }
         return result;

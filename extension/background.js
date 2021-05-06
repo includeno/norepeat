@@ -187,7 +187,7 @@ async function compute(message,fn) {
       })
     }
     else {
-      fn(url, username, password);
+      fn(message, username, password);
     }
 
   }
