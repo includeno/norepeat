@@ -3,35 +3,41 @@
 <html>
 
 <body>
-  <div width="100px" id="app">
+  <div width="500px" id="app">
 
     <div>
-      <div width="100px" v-if="loginstate">
+      <div width="100px" v-if="loginstate==1">
         <div width="100px">
           <h2>{{ message }} {{ username }} <button v-on:click="logout">{{ logout_message }}</button></h2>
-
         </div>
         
-        
-        
       </div>
-      <vue_form v-else></vue_form>
+      <div v-else>
+
+        <vue_form_login v-if="loginstate==0"></vue_form_login>
+        <vue_form_register v-if="loginstate==2"></vue_form_register>
+        <vue_form_reset v-if="loginstate==3"></vue_form_reset>
+      </div >
+      
 
     </div>
 
     <div>
-      <div v-if="loginstate">
-        <h3>今天的临时列表/Today's temporary URL list<button v-on:click="gettemplist">刷新列表/Refresh Table</button></h3>
+      <div v-if="loginstate==1">
+        <h3>今天的临时列表/Today's temporary URL list
+          <button v-on:click="gettemplist">刷新列表/Refresh Table</button>
+          <button v-on:click="deletetemplist">清空列表/Clear Table</button>
+        </h3>
         
         
         <br>
         
         <div ref="hello" id="requestform">
 
-          <table v-bind:style="{width : 430+'px' }" align="left">
+          <table v-bind:style="{width : 600+'px' }"  align="left">
             <tr>
               <td v-bind:style="{width : 150+'px' }">时间/Time UTF</td>
-              <td v-bind:style="{width : 280+'px' }">链接/URL</td>
+              <td v-bind:style="{width : 400+'px' }">链接/URL</td>
             </tr>
 
             <tr v-for="(item, index) in templist">
@@ -42,7 +48,13 @@
               <td v-bind:style="{width : 280+'px' }">
                 <a href="item.url" v-on:click="opennewtab(item.url)">{{show_standard_url(item.url)}}</a>
               </td>
+              <td v-bind:style="{width : 150+'px' }">
+                <button v-on:click="deletetemplistitem(index)">删除记录</button>
+              </td>
+              <!-- 多选框参考 https://www.cnblogs.com/li-sir/p/11445559.html -->
+              <td>
 
+              </td>
             </tr>
         </div>
         </table>

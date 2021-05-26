@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-
+import com.example.demo.service.UserService2;
 import com.example.demo.util.MD5Util;
 import com.example.demo.util.UserData;
 import org.slf4j.Logger;
@@ -20,6 +20,8 @@ import java.util.HashMap;
 public class UserController {
     Logger log= LoggerFactory.getLogger("UserController");
 
+    @Autowired
+    UserService2 userService;
 
     @PostMapping("/checkuser")
     public HashMap<String, String> checkuser(){
@@ -37,6 +39,22 @@ public class UserController {
     @PostMapping("/register")
     public HashMap<String, String> register(String username,String password){
         HashMap<String, String> result=new HashMap<>();
+        Boolean registerResult=userService.register(username,password,"user");
+        if(registerResult.equals(Boolean.FALSE)){
+            result.put("code","403");
+            log.info("注册失败 账户已存在 "+username+"->"+password);
+        }
+        else{
+            result.put("code","200");
+            log.info("注册成功 "+username+"->"+password);
+        }
+        return result;
+    }
+
+    //旧版本内置注册
+    @PostMapping("/register2")
+    public HashMap<String, String> register2(String username,String password){
+        HashMap<String, String> result=new HashMap<>();
         if(UserData.data.get(username)!=null){
             result.put("code","403");
             log.info("注册失败 账户已存在 "+username+"->"+password);
@@ -48,6 +66,5 @@ public class UserController {
         }
         return result;
     }
-
 
 }

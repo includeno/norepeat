@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import javax.annotation.Resource;
 
 /**
  * @Author: oyc
@@ -22,7 +21,7 @@ import javax.annotation.Resource;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Resource
+    @Autowired
     private UserService<User> userService;
 
     @Autowired

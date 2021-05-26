@@ -1,3 +1,4 @@
+var box = null;//定义注入的控件
 
 function checkNotification() {
     if (!("Notification" in window)) {
@@ -16,11 +17,6 @@ function checkNotification() {
 }
 
 
-
-var box = null;
-
-
-
 var url = "url:" + window.location.href
 console.log('url send message', url);
 chrome.runtime.sendMessage(url, (response) => {
@@ -30,47 +26,69 @@ chrome.runtime.sendMessage(url, (response) => {
 });
 
 function elementpos(event) {
-    var screen_width = screen.availWidth;
-    var screen_height = screen.availHeight;
-    var currentmouse = document.elementFromPoint(event.screenX, event.screenY);
+    var dragtarget = document.getElementById('dragtarget');
+    if (dragtarget != null) {
+        if (currentelement != null && currentelement != '') {
+        
+            dragtarget.innerHTML='添加至列表/Add to list';
+        }
+        else {
+            dragtarget.innerHTML='拖动改变位置';
+        }
+    
+    }
+    
+
+    
+    
+    // var currentmouse = document.elementFromPoint(event.screenX, event.screenY);
+    // var countOfA = 0;
+    // var children = null;
+    // if (currentmouse != null) {
+    //     children = currentmouse.children;
+    // }
+    // if (children == null) {
+    //     console.log("children == null  "+event.screenX + " " + event.screenY);
+    // } else {
+        
+    //     for (var i = 0; i < children.length; i++) {
+    //         if (children[i].tagName == 'a') {
+    //             countOfA++;
+    //         }
+    //         console.log("children[i].tagName =>  "+children[i].tagName + " ");
+
+    //     }
+    // }
+    // console.log("countOfA =>  "+countOfA + " ");
     // box.style.top = ''  + event.screenY + 'px'
     // box.style.left = '' +event.screenX + 'px'
     var y = (parseInt(event.pageY));
     var x = (parseInt(event.pageX));
-    if (y > 0 && y <= screen_height - 40) {
-        box.style.top = '' + (y + 30).toString() + 'px';
-    }
-    if (y > screen_height) {
-        box.style.top = '' + (y - 40).toString() + 'px';
-        console.log("(parseInt(event.pageY) - 50).toString()" + (y - 70).toString());
-    }
+    
+    //固定在屏幕右下角做法 https://www.w3school.com.cn/css/css_positioning.asp
+    
 
 
-    if (x > 0 && x <= screen_width - 40) {
-        box.style.left = '' + (x + 30).toString() + 'px';
 
-    }
-    if (x > screen_width) {
-        box.style.left = '' + (x - 70).toString() + 'px';
-        console.log("(parseInt(event.pageX) - 50).toString()" + (x - 70).toString())
-    }
-    box.style.position = 'absolute';
-
-
-    if (currentelement != null && currentelement != '') {
-        box.innerHTML = '<h2>添加至列表/Add to list</h2>'
-        box.style.color = "red"
-    }
-    else {
-        box.innerHTML = ''
-    }
-
-    // if (currentmouse != null) {
-    //     //console.log('currentmouse', currentmouse.tagName);
-    //     if (currentmouse.tagName == 'a') {
-    //         //console.log('currentmouse =>a', currentmouse.href);
-    //     }
+    //跟随鼠标做法
+    // if (y > 0 && y <= screen_height - 40) {
+    //     box.style.top = '' + (y + 30).toString() + 'px';
     // }
+    // if (y > screen_height) {
+    //     box.style.top = '' + (y - 40).toString() + 'px';
+    //     console.log("(parseInt(event.pageY) - 50).toString()" + (y - 70).toString());
+    // }
+
+
+    // if (x > 0 && x <= screen_width - 40) {
+    //     box.style.left = '' + (x + 30).toString() + 'px';
+
+    // }
+    // if (x > screen_width) {
+    //     box.style.left = '' + (x - 70).toString() + 'px';
+    //     console.log("(parseInt(event.pageX) - 50).toString()" + (x - 70).toString())
+    // }
+    
 
 }
 
@@ -82,9 +100,7 @@ const bingdingkey = '192'
 //测试案例3 百度搜索结果 通过
 function tag_a_event_over(event) {
     console.log('element=', event);
-    //console.log('srcElement=', event.srcElement);
-    //console.log('event.srcElement.href=',event.srcElement.href);
-    //console.log('(event.srcElement)=>', (event.srcElement));
+    
     if (event.srcElement != null && 'href' in event.srcElement) {
         currentelement = event.srcElement.href;
         console.log('event.srcElement 1=>', event.srcElement.href);
@@ -119,13 +135,21 @@ function tag_a_event_over(event) {
             currentelement = temp.href;
         }
     }
+    if(currentelement != null){
+        if(typeof currentelement =='string'){
+            if(currentelement.indexOf('javascript:') != -1){
+                currentelement = null;
+            }
+            else{
+                currentelement = currentelement.replace(" ", "");
+            }
+            
+        }
+        else{
 
-    if (currentelement != null && currentelement.indexOf('javascript:') != -1) {
-        currentelement = null;
+        }
     }
-    if (currentelement != null) {
-        currentelement = currentelement.replace(" ", "");
-    }
+    
 }
 
 function tag_a_event_out(event) {
@@ -143,8 +167,62 @@ function addListenerOfTag() {
 }
 window.onload = function () {
     box = document.createElement('div');
-    box.innerHTML = '<h1>cccdsddsd</h1>'
-    box.id = 'boxmy'
+    box.innerHTML = '<p draggable="true" id="dragtarget" color="green">拖动改变位置</p>';
+    box.id = 'mybox';
+    
+    box.draggable = "true";
+    
+    box.style.zIndex = '100000';
+    box.style.color = "red"
+    box.style.top = '50%';
+    box.style.left = '0';
+    box.style.position = 'fixed';
+
+    //取消默认拖动限制
+    box.addEventListener('dragover', function (event) {
+        event.preventDefault();
+        console.log("dragover "+event.screenY);
+    });
+
+    //
+    box.addEventListener('drag', function (event) {
+        
+        console.log("drag "+event.screenY);
+    });
+
+    //
+    box.addEventListener('dragstart', function (event) {
+        
+        console.log("dragstart "+event.screenY);
+    });
+
+    box.addEventListener('dragend', function (event) {
+        var screen_width = screen.availWidth;
+        var screen_height = screen.availHeight;
+        
+        //https://www.cnblogs.com/jiangxiaobo/p/6593584.html
+
+        if (event.clientX >= screen_width / 2 + 1) {
+            //box.removeAttribute("style");
+            box.style.left = '';
+            box.style.right = '0';
+            box.style.zIndex = '100000';
+            //box.style.color = "red";
+            box.style.position = 'fixed';
+        }
+        else {
+            //box.removeAttribute("style");
+            box.style.left = '0';
+            box.style.right = '';
+            box.style.zIndex = '100000';
+            box.style.position = 'fixed';
+            //box.style.color = "red";
+        }
+        box.style.top = event.clientY + 'px';
+        console.log("dragend "+event.pageY+box.style.top);
+        console.log("dragend "+event.clientY+box.style.top);
+    });
+
     document.body.appendChild(box);
 
     document.onkeyup = function (event) {
@@ -166,4 +244,11 @@ window.onload = function () {
     };
     addListenerOfTag();
     document.onmouseover = elementpos;
+
+    //https://segmentfault.com/q/1010000009637450  https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver
+    var container = document.body
+    container.addEventListener('DOMSubtreeModified', function () {
+        //console.log("监听到页面变化");
+        addListenerOfTag();
+    }, false);
 }

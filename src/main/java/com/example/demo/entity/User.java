@@ -5,9 +5,17 @@ public class User {
     Integer id;
     String username;
     String password;
+    String authority;
+
     public User(String username,String password){
         this.username=username;
         this.password=password;
+        this.authority="";
+    }
+    public User(String username,String password,String authority){
+        this.username=username;
+        this.password=password;
+        this.authority=authority;
     }
 
     public Integer getId() {
@@ -34,6 +42,13 @@ public class User {
         this.password = password;
     }
 
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
+    }
     public static User build(String username,String password){
         User a=new User(username,password);
         return a;

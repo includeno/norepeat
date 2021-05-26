@@ -1,12 +1,14 @@
-#环境配置
+
+#环境配置 redis数据库
 docker run -itd --name redis_container -p 6379:6379 --restart=always redis:6.0.13 redis-server --appendonly yes --requirepass "redis123456"
+
 docker stop redis_container
 docker rm redis_container
 
 1.拉取线上版本
 docker pull includeno/norepeat_springboot:1.0.2
-vscode 终端
 
+vscode 终端
 2.打包本地镜像  -e --dockerconfig=mac 表示docker是部署在Mac OS上的，-e --dockerconfig=Linux表示docker是部署在Linux服务器上的，
 mvn clean package -Dmaven.test.skip=true
 docker build . -t includeno/norepeat_springboot:1.0.2

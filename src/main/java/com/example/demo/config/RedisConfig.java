@@ -14,8 +14,10 @@ import org.springframework.data.redis.connection.lettuce.LettuceClientConfigurat
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.net.UnknownHostException;
 import java.time.Duration;
 
 @Configuration
@@ -40,14 +42,39 @@ public class RedisConfig extends CachingConfigurerSupport {
     private int minIdle;
     @Value("${spring.redis.timeout}")
     private int timeout;
+    @Value("${dockerconfig}")
+    private String dockerconfig;
+    
 
     @Autowired
     private LettuceConnectionFactory lettuceConnectionFactory;
 
     @Bean
-    public LettuceConnectionFactory redisConnectionFactory() {
+    public LettuceConnectionFactory redisConnectionFactory() throws UnknownHostException {
 
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration ();
+        
+        
+        String osName = System.getProperty("os.name");
+        if (osName.startsWith("Mac OS")) {
+            // 苹果 非docker环境
+            System.out.println("Mac OS");
+        } else if (osName.startsWith("Windows")) {
+            // windows 非docker环境
+
+            System.out.println("Windows");
+        } else {
+            //docker内部使用Linux 外部环境是mac
+            if(dockerconfig.equals("mac")){
+                // unix or linux
+                System.out.println("Linux");
+                host="host.docker.internal";
+            }
+            //docker内部使用Linux 外部环境是linux 服务器
+            else if(dockerconfig.equals("linux")){
+                
+            }
+        }
         redisStandaloneConfiguration.setHostName(host);
         redisStandaloneConfiguration.setPort(port);
         redisStandaloneConfiguration.setDatabase(database);
@@ -62,23 +89,20 @@ public class RedisConfig extends CachingConfigurerSupport {
         return factory;
     }
 
-    @Bean
-    public RedisTemplate<Object, Object> redisTemplate(LettuceConnectionFactory redisConnectionFactory) {
-        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-
-        // 使用Jackson2JsonRedisSerialize 替换默认序列化
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-
-        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
+    
+    @Bean(name = "redisTemplate")
+    public RedisTemplate<String, String> redisTemplate2(LettuceConnectionFactory lettuceConnectionFactory) throws UnknownHostException {
+        System.out.println("redisTemplate2");
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(lettuceConnectionFactory);
 
         // 设置value的序列化规则和 key的序列化规则
-        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+
+        // 设置Hash的序列化规则和 key的序列化规则
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }

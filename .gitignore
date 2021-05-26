@@ -36,3 +36,6 @@ mvnw*
 .mvn
 
 PythonDockerfile
+.DS_Store
+.gitignore
+extension/*.png

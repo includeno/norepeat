@@ -1,5 +1,5 @@
 // Holds the data structure for all the context menus used in the app
-var server = 'http://47.100.40.223:9999/'
+var server = 'http://127.0.0.1:9999/'
 
 var script = document.createElement("script");
 script.type = "text/javascript";
@@ -44,6 +44,20 @@ function setUpContextMenus() {
       current = tab.url;
       sendrequest(current, "delete");
 
+    }
+  });
+
+  chrome.contextMenus.create({
+    title: "添加至临时列表",
+    id: "temp",
+    //documentUrlPatterns: [ "chrome-extension://*/a.html","http://*/*", "https://*/*"],
+    contexts: ['page'],
+    onclick: function (info, tab) {
+      // 注意不能使用location.href，因为location是属于background的window对象
+      var current = ""
+      current = tab.url;
+      //sendrequest(current, "delete");
+      compute(current, send_add_to_list_request);
     }
   });
 
