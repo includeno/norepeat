@@ -30,7 +30,7 @@ jobs:
       - name: Output Docker info
         run: docker info
       - name: Output Docker info
-          run: docker buildx ls
+        run: docker buildx ls
       - name: Sets build date
         run: echo "BUILD_DATE=$(date '+%Y%m%d')" >> $GITHUB_ENV
       - name: Login to DockerHub
