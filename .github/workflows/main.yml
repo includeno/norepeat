@@ -33,8 +33,8 @@ jobs:
         run: ls -a
       - name: Output Docker info
         run: docker info
-      - name: Output Docker info
-        run: docker buildx ls
+      - name: docker buildx
+        run: docker buildx create --use --name mybuilder
       - name: Sets build date
         run: echo "BUILD_DATE=$(date '+%Y%m%d')" >> $GITHUB_ENV
       - name: Login to DockerHub
@@ -47,6 +47,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
+          platforms: linux/amd64,linux/arm64
           context: .
           tags: "includeno/${{ env.TAG_NAME }}:latest,includeno/${{ env.TAG_NAME }}:${{ env.STATE_RELEASE_VERSION }}"
           push: true
