@@ -14,7 +14,11 @@ env:
 jobs:
   build:
     name: 构建,发布
-    runs-on: ubuntu-latest # use latest ubuntu to run the job
+    #runs-on: ubuntu-latest # use latest ubuntu to run the job
+    runs-on: ${{ matrix.os }}
+      strategy:
+        matrix:
+          os: [ ubuntu-18.04, macos-10.15,macos-11 ]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/checkout@v1
